@@ -1,19 +1,37 @@
-/*
-*此文件来存储有关图的代码
-*实现关于图的邻接表(    即二维数组 如 List_[0]={ 2,3      3,4      }  表示 0--2 为边 权值3  0---3为边权值4 类似   适合稀疏图  缺点会重复收录边   )
-*和邻接矩阵(Matrix[3][4]=23  表示3---4 为边权值 23    如果权值为 INT_MAX 表示没有边  适合稠密图     如果利用上三角矩阵存储可以节省空间     )
-*实现BFS  breath  first search  深度优先搜索  设置访问数组visited[]  从起点出发把能走的结点全部走一遍
-*实现DFS depth  fisrt search   广度优先搜索  选择起点  将能走的点 放入队列中 依次访问队列的点 将其作为起点 重复过程 (类似与层序遍历) 
+/*                                       此文件来存储有关简单无向图的代码
+*实现关于图的邻接表(    即二维数组 如 List_[0]={ 2,3      3,4      }  表示 0--2 为边 权值3  0---3为边权值4  适合稀疏图  缺点会重复收录边   )
+*注意 在教材在 邻接表 的表示类似于 vector<list<T>> List  即 List[0] ={  2->3->4 }表示 顶点0连接2 3 4
+*和邻接矩阵(Matrix[3][4]=2 表示3---4 为边权值 2    权值为 INT_MAX 表示没有边  适合稠密图     如果利用上三角矩阵存储可以节省空间     )
+*  逆邻接矩阵  将入度边进行 vector<list< T>> list   List  即 List[0] ={  2->3->4 }表示 顶点2 3 4 连接0
+* 十字链表 就是将  在数组vector<(out< T> ,in<T >) > >  入度作in 相连  出度 作out  在  增加一个结点 进行把 邻接表中从前 各个不相连接的
+* 的节点  作为入度关系连接起来    复杂度与 邻接表一样 O(N+M)  N边  M节点
+*实现BFS  breath  first search  深度优先搜索
+*设置访问数组visited[]   访问先初始化 全部为0  后续标记 如 visited[3]=1 表示 结点3 已被访问(结点的序号是由顶点表位置确定的)
+*把邻接矩阵或邻接表 遍历  访问则 标记为1    从起点出发把能走的结点全部走一遍
+*实现DFS depth  fisrt search   广度优先搜索  选择起点  将能走的点 放入队列中 依次访问队列的点 将其作为起点 重复过程 (类似与层序遍历)
+*                       BFS的访问的节点可看做为 一颗生成树   名字为 广度优先生成树
+*!!!注意DijKstra算法和floyd算法    不能是负权图
 *DijKstra算法最短路算法     存放数组 constr[]      按路径最短排序的数组side[]
 *㈠ 设置起点 将起点放入 constr数组中  检查constr相邻的点按权值排序放入side[]  (如果没有邻接点 重新设置起点)
 *㈡选择side最小权值的点进入 constr数组  根据constr的领接点重新 刷新 side[]      重复  ㈠  直到到达终点
+*
+*floyd算法       求解任意二个顶点之间的最短路径 即多源最短路径问题
+* 首先构造二个数组  D数组 存放则 图的邻接矩阵  D[2][3]=9 表示 顶点 2和3 直接连通 权值为9  INT_MAX则不连通
+*P 数组存放则 两个顶点的中转点 (  比如 不经过其他顶点   A->B 的权值和 为   此时 出现C点 由 A->C->B =9 <10  则称C为中转点
+*   即 出现另一个点使得  二个顶点的权值和 减少   那此点 为中转点   ) p[2][3 ]= 1 表示中转关系为 2->1->3  顶点1使得 2 ->3的权值和减小
+*P数组的实现 过程为  1.  先将P数组  按照D数组初始化 如果A,B之间有边 则 P[A][B]=A 否则为 -1
+*2.  将各个顶点以此 进行运算  比如 加入  坐标A  其他坐标 C D 满足 D[C][A]+D[D][A] <D[C][D]  z则将D[C][D]=D[C][A]+D[D][A] (此处为顶点表格的坐标)  P[C][D]=A
+*3.  继续加入其他结点 如 E    其他坐标 C D 满足 P[C][E]+p[D][E] <p[C][E]  z则将P[C][D]=E(此处为顶点表格的坐标)   重复过程2  直到所有顶点都加入
+*
+*则 P数组保存的信息就是最短路径   如果P[A][B]=C    表示路径为A->C->B则权值为 D[C][A]+D[D][A]
+*
 *!!!注意 Prim  和kruskal  (算法需要无回路 无独立顶点)
-*Prim    存放数组 constr[] 设置起点  检查constr数组中存放点的临结点 将权值最小的放入constr中 重复此过程 直到所有的顶点在数组中(N -1 条边 )
+*Prim   存放数组 constr[] 设置起点  检查constr数组中存放点的临结点 将权值最小的放入constr中 重复此过程 直到所有的顶点在数组中(N -1 条边 )
 *Krsukal  每次收录权值最小的边  重复此过程 直到所有的顶点在数组中(N -1 条边 )
 *!!!!!此文件的缺点
 *㈠ 使用大量容器  过度 依赖STL 导致程序内存占用偏高
 *㈡  设计不够清晰  如: vertexes  存放 顶点的字符串  其他相关数组存坐标  表示结点  导致 信息混乱 不能分清 权值和坐标  各项依赖程度过高
-*日期2018-09-20 时间23:36  
+*日期2018-09-20 时间23:36
 */
 #ifndef GRAPH1_H
 #define GRAPH1_H
@@ -36,7 +54,7 @@ using std::set;
 using std::string;
 constexpr auto INTmax = 6555;//定义邻接矩阵的权值的最大值;
 using Matrix = vector<vector<int>>;//矩阵类型别名
-using List_ = vector<vector<pair<int, int>>>;
+using List_ = vector<vector<pair<int, int>>>;//邻接表别名   ... 缺陷
 //邻接表类型别名
 //构造无向图有权图 使用临接表存储  和  矩阵
 class Graph
@@ -49,10 +67,10 @@ public:
 		BFSTraverse();
 		DFSTraverse();
 	}
-	const  Graph &operator=(const Graph&) = delete;
+	Graph &operator=(const Graph&) = delete;
 	~Graph() = default;
 private:
-	string vertexes;//顶点表
+	string vertexes;//存放所有的顶点 的字符串
 	Matrix matrix;//邻接矩阵 
 	List_ List;//邻接表 pair 第一个是结点 第二个是权值
 	int numVertexes = 0;//顶点数
@@ -61,14 +79,15 @@ private:
 	void DFS(vector<int>&, int);//Depth First Search 深度优先搜索	算法
 	void BFSTraverse();//利用BFS的全部遍历
 	void DFSTraverse();//利用DFS的全部遍历
+	//将BFS的访问的节点可看做为 一颗生成树   名字为 广度优先生成树
 	void unweighted(int&);//无权图的单源最短路径  此为无向图有权 所以此方案将 默认将权值看为1  
 	void DijKstra(int &);//有权图的最短路径算法  即 每次进行路径选择时使用最优解
 	//图必须是连通图  即 没有 单独结点存在
 	vector<pair<int, int>> tree;//表示为结点路径  比如  tree[1]={2,3}表示  2---3的路径
 	//最小生成树  实现村村通  实现在权值和最小的情况下 连接所以的结点  
 	//传入的参数代表则 在顶点表中的下标 作为起点
-	void Prim(int &);
-	void Kruskal();//kruskal算法构造最小生成树每次选取最小的边 直到全部结点收录
+	void Prim(int &);//加点法
+	void Kruskal();//  加边法 kruskal算法构造最小生成树每次选取最小的边 直到全部结点收录
 	void check_site(int &);//检查输入的起点  坐标
 };
 
@@ -117,9 +136,9 @@ inline void Graph::BFS(vector<int>&visited)
 	//利用队列实现类似于层序遍历
 	queue<int> contianer;
 	//1表示已经访问完成
-	for (int i = 0; i < numVertexes; i++)//进行列扫描 对应 结点
+	for (int i = 0; i < numVertexes; i++)//进行列扫描 对应 结点			
 	{
-		if (!visited[i])//没有访问则压入队列
+		if (visited[i] == 0)//没有访问则压入队列
 		{
 			visited[i] = 1;
 			cout << vertexes[i];//打印顶点
@@ -152,8 +171,8 @@ inline void Graph::DFS(vector<int>&visited, int site)
 	cout << vertexes[site];//打印顶点
 	for (; j < numVertexes; ++j)
 	{
-		if (matrix[site][j] != INTmax && !visited[j])
-			DFS(visited, j);
+		if (matrix[site][j] != INTmax && !visited[j])//为邻接点 且 没有被访问过
+			DFS(visited, j);//进入下一个节点
 	}
 }
 
@@ -322,13 +341,17 @@ inline void Graph::Kruskal()
 		}
 	//进行权值排序就是按权值最小边的集合
 	std::sort(container.begin(), container.end(),
+		//lambda表达式   
 		[](std::tuple<int, int, int > & lhs, std::tuple<int, int, int >& rhs)
 	{
-		if (std::get<2>(lhs) < std::get<2>(rhs))return true; else false; }
+		if (std::get<2>(lhs) < std::get<2>(rhs))return true;
+		else return  false; //权值比较
+	}
 	);
 
 	if (container.size() < numEdges - 1)cout << "无最小树";
 }
+
 inline void Graph::check_site(int &i)
 {
 	int size = vertexes.size();
