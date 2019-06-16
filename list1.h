@@ -1,4 +1,4 @@
-//ÏßĞÔ±íµÄÀà ÊµÏÖ  ²éÕÒ  ²åÈë ·´×ª É¾³ı Ïú»Ù
+//çº¿æ€§è¡¨çš„ç±» å®ç°  æŸ¥æ‰¾  æ’å…¥ åè½¬ åˆ é™¤ é”€æ¯
 #ifndef LIST1_H
 #define LIST1_H
 #include<iostream>
@@ -18,7 +18,7 @@ template<typename T>
 class NODE
 	{
 	public:
-	NODE(T & s) :data(s), next1(nullptr) {}// ½øÈë´«ÈË²ÎÊıÊ± Ö¸ÕëÖÃ¿Õ
+	NODE(T & s) :data(s), next1(nullptr) {}// è¿›å…¥ä¼ äººå‚æ•°æ—¶ æŒ‡é’ˆç½®ç©º
 	T data;
 	shared_ptr<NODE> next1 = nullptr;
 	};
@@ -29,22 +29,20 @@ public:
 	List1():node(nullptr){}
 	List1(initializer_list<T> ppx);
 	List1(const List1<T>&rh);
-	void erase(int&& site);//É¾³ı´Ó0¿ªÊ¼
-	void	operator  = (const List1<T>&rh) { this->node = rh.node; }
+	void erase(int&& site);//åˆ é™¤ä»0å¼€å§‹
+	List1&	operator  = (const List1<T>&rh) { this->node = rh.node; }
 	inline void serach(int site);
 	inline   int  length() ;
 	inline const  int length() const;
 	inline void print_all();
-	void reverse(int n);//·´×ªÁ´±íÖĞÇ°Îªn¸öµÄ½áµã
-	 //²»ÔÊĞí´«µİ³ıÍ·½áµãµÄÖ¸Õë  ÒÔÃâÎŞ·¨É¾³ı
-	//Ïú»ÙËùÓĞ½Úµã Ö»ĞèÒªÏú»ÙÍ·½Úµã 
-	~List1()
-	{
-		this->node = nullptr;
-	}
+	void reverse(int n);//åè½¬é“¾è¡¨ä¸­å‰ä¸ºnä¸ªçš„ç»“ç‚¹
+	 //ä¸å…è®¸ä¼ é€’é™¤å¤´ç»“ç‚¹çš„æŒ‡é’ˆ  ä»¥å…æ— æ³•åˆ é™¤
+	//é”€æ¯æ‰€æœ‰èŠ‚ç‚¹ åªéœ€è¦é”€æ¯å¤´èŠ‚ç‚¹ 
+	~List1()=default;
+	
 private:	
-	shared_ptr<NODE<T>> node;//Ö»ÓµÓĞÍ·½Úµã
-//ÓÃÓÚ¼ì²éÊı¾İÔ½½çÎÊÌâ ²¢Å×³öÒì³£  ´«ÈëµÄ²ÎÊıÊÇ¿½±´µÄ ±ÜÃâ´íÎó
+	shared_ptr<NODE<T>> node;//åªæ‹¥æœ‰å¤´èŠ‚ç‚¹
+//ç”¨äºæ£€æŸ¥æ•°æ®è¶Šç•Œé—®é¢˜ å¹¶æŠ›å‡ºå¼‚å¸¸  ä¼ å…¥çš„å‚æ•°æ˜¯æ‹·è´çš„ é¿å…é”™è¯¯
   inline	int check_available(int &site);
 };
 
@@ -65,8 +63,8 @@ List1(initializer_list<T> ppx)
 			else
 			{
 				shared_ptr<NODE<T>>mp(new NODE<T>(s));
-                   p ->next1= mp;//ÉÏÒ»¸öµÄ½á¹¹Ö¸Õë¸³Öµ
-			       p = mp;//ºóÒÆ
+                   p ->next1= mp;//ä¸Šä¸€ä¸ªçš„ç»“æ„æŒ‡é’ˆèµ‹å€¼
+			       p = mp;//åç§»
 			}
 			++i;
 		}
@@ -83,7 +81,7 @@ inline List1<T>::List1(const List1<T> &rh)
 template<typename T>
 inline int List1<T>::length()
 {
-	return  //Í¨¹ıconstÀàĞÍ×ª»»ÀàÌá¸ß´úÂëÖØÓÃĞÔ
+	return  //é€šè¿‡constç±»å‹è½¬æ¢ç±»æé«˜ä»£ç é‡ç”¨æ€§
 		(static_cast<const List1<T>&>(*this)).length();
 }
 
@@ -117,10 +115,10 @@ inline void List1<T>::reverse(int n)
 {
 	if (n > length()-1)
 	{
-		cout << "·´×ª³¤¶ÈÎ¥¹æ"; return;
+		cout << "åè½¬é•¿åº¦è¿è§„"; return;
 	}
-	if (this->node == nullptr)return;//¿Õ²»×öÈÎºÎÊÂÇé
-	auto save = this->node;//±£ÁôÍ·Ö¸Õë
+	if (this->node == nullptr)return;//ç©ºä¸åšä»»ä½•äº‹æƒ…
+	auto save = this->node;//ä¿ç•™å¤´æŒ‡é’ˆ
 	auto ne = this->node;
 	auto  old = this->node->next1;
 	while (n!=0)
@@ -145,7 +143,7 @@ inline int List1<T>::check_available(int& site)
 		}
 		catch (int)
 		{
-			cout << "ÊäÈë´íÎó   ÇëÖØĞÂÊäÈësite" << std::endl;
+			cout << "è¾“å…¥é”™è¯¯   è¯·é‡æ–°è¾“å…¥site" << std::endl;
 			cin >> site;
 		}
 	}
@@ -181,8 +179,8 @@ inline void   List1<T>::serach(int site)
 		p = p->next1;
 		--right_site;
 	}
-	if (right_site == 0) cout << "µÚ" << s1 << "Î»ÖÃÉÏµÄÊı¾İÊÇ " << p->data;
-	else if(p == nullptr) cout << "²éÑ¯Ô½½ç";
+	if (right_site == 0) cout << "ç¬¬" << s1 << "ä½ç½®ä¸Šçš„æ•°æ®æ˜¯ " << p->data;
+	else if(p == nullptr) cout << "æŸ¥è¯¢è¶Šç•Œ";
 }
 #endif // !LIST1_H
 
