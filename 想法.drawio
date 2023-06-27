@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-06-27T10:02:42.625Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36" etag="pdksRy2XL83C3FaqbZef" version="21.5.1" type="github">
+<mxfile host="app.diagrams.net" modified="2023-06-27T10:10:17.663Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36" etag="fWYllr_Wgk2b7iGWzbU6" version="21.5.1" type="github">
   <diagram name="第 1 页" id="IZRkvTElKmnIftRhRL36">
     <mxGraphModel dx="1229" dy="1823" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -183,6 +183,12 @@
         </mxCell>
         <mxCell id="OzouyI2OrZcjhv3li7sO-3" value="是使用混淆矩阵来描述成对类偏差" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="335" y="860" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="OzouyI2OrZcjhv3li7sO-5" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="507" y="850" width="583" height="500" as="geometry" />
+        </mxCell>
+        <mxCell id="OzouyI2OrZcjhv3li7sO-6" value="成对偏差 - 当前类别为X 预测为Y 和Y 预测为X的 之间不均等的值" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="545" y="880" width="120" height="60" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
